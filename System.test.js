@@ -1,7 +1,7 @@
 const { User, App, Station, Scooter } = require("./System");
 
-const user1 = new User("Bob", "29", 25);
-const user2 = new User("jane", "29", 600);
+const user1 = new User("Bob", 29, 25);
+const user2 = new User("jane", 29, 600);
 
 const app = new App();
 
@@ -26,12 +26,15 @@ describe("Intergration Test for Hire App System", () => {
     station1.rentScooter(user1, app);
     // step6: user can now ride rented scooter
     user1.scooter.ride(50);
+    user1.scooter.markAsBroken();
     // step7 user can return scooter, fixed rate deducted on return
     station1.returnScooter(user1, app);
+    console.log(station1);
   });
 
   test("station1 should have 2 charged scooter in scooters array ", async () => {
-    await station1.chargeAndReStockScooters();
+    // await station1.chargeAndReStockScooters();
+    await station1.callMaintenance();
     console.log(station1);
   });
 });

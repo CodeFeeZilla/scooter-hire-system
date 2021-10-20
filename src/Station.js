@@ -77,10 +77,12 @@ class Station extends Base {
     });
   }
 
-  callMaintenance() {
-    this.scooters = this.scooters.concat(
-      Maintenance.repairScooters(this.markedForRepair)
+  async callMaintenance() {
+    const repairedScooters = await Maintenance.repairScooters(
+      this.markedForRepair
     );
+    this.unchargedScooters = this.unchargedScooters.concat(repairedScooters);
+    this.markedForRepair = [];
   }
 
   static connectStationsToApp() {

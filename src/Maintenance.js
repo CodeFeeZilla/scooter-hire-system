@@ -1,7 +1,12 @@
 class Maintenance {
   static repairScooters(scooters) {
-    return scooters.map((scooter) =>
-      Object.assign(scooter, { isBroken: false })
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        const fixedScooters = scooters.map((scooter) =>
+          Object.assign(scooter, { isBroken: false })
+        );
+        resolve(fixedScooters);
+      }, 1000)
     );
   }
 }

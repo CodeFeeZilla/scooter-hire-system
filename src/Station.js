@@ -31,7 +31,6 @@ class Station extends Base {
       !this.isUserAtStation(user),
       "user must be at a charging station to rent a scooter"
     );
-    app.addAndStartUserTimer(user);
     user.scooter = this.scooters.pop();
   }
 
@@ -42,7 +41,6 @@ class Station extends Base {
     );
 
     const scooter = user.scooter;
-    app.stopAndRemoveUserTimer(user);
     app.takePayment(user);
     user.scooter = null;
     if (scooter.isBroken) this.markedForRepair.push(scooter);

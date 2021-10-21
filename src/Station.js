@@ -31,7 +31,9 @@ class Station extends Base {
       !this.isUserAtStation(user),
       "user must be at a charging station to rent a scooter"
     );
+    this.throwError(!app, "user must present app to rent a scooter");
     user.scooter = this.scooters.pop();
+    app.recordRentalTime(user);
   }
 
   returnScooter(user, app) {
@@ -39,12 +41,15 @@ class Station extends Base {
       !this.isUserAtStation(user),
       "user must be at a charging station to return a scooter"
     );
-
+    this.throwError(!app, "user must present app to return scooter");
     const scooter = user.scooter;
-    app.takePayment(user);
-    user.scooter = null;
+
     if (scooter.isBroken) this.markedForRepair.push(scooter);
     else this.unchargedScooters.push(scooter);
+
+    app.recordReturnTime(user);
+    app.takePayment(user);
+    user.scooter = null;
   }
 
   recordVisitor(user) {
@@ -75,15 +80,14 @@ class Station extends Base {
     await Promise.all(this.bulkChargeScooters());
 
     // assigns charged scooters from uncharged array back into charged scooters array
-    this.scooters = this.unchargedScooters.filter((scooter) => {
-      if (scooter.isCharged) return scooter;
-    });
+    this.scooters = this.unchargedScooters.filter(
+      (scooter) => scooter.isCharged
+    );
 
     // removes charged scooters from uncharged array
-    this.unchargedScooters = this.unchargedScooters.filter((scooter) => {
-      if (!scooter.isCharged) return scooter;
-      return;
-    });
+    this.unchargedScooters = this.unchargedScooters.filter(
+      (scooter) => !scooter.isCharged
+    );
   }
 
   async callMaintenance() {

@@ -9,6 +9,7 @@ class App extends Base {
     this.stations = [];
     this.users = [];
     this.payments = [];
+    this.userTimers = [];
   }
 
   verify(age) {
@@ -22,6 +23,23 @@ class App extends Base {
 
   addStations(stations) {
     this.stations = stations;
+  }
+
+  addAndStartUserTimer(user) {
+    const userTimer = { id: user.id, time: 0, timerId: null };
+    userTimer.startTimer = function () {
+      this.timerId = setInterval(() => {
+        this.time++;
+      }, 1000);
+    };
+    this.userTimer.startTimer();
+    this.userTimers.push(userTimer);
+  }
+
+  stopAndRemoveUserTimer(user) {
+    const userTimer = this.userTimers.find(
+      (userTimer) => userTimer.id === user.id
+    );
   }
 
   takePayment(user) {

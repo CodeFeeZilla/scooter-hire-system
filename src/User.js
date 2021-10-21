@@ -35,6 +35,10 @@ class User extends Base {
   visit(station) {
     station.recordVisitor(this);
   }
+
+  leave(station) {
+    station.recordVisitorDepart(this);
+  }
 }
 
 module.exports = User;

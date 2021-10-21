@@ -26,16 +26,23 @@ class Station extends Base {
     else this.unchargedScooters.push(scooter);
   }
 
-  rentScooter(user) {
+  rentScooter(user, app) {
     this.throwError(
       !this.isUserAtStation(user),
       "user must be at a charging station to rent a scooter"
     );
+    app.addAndStartUserTimer(user);
     user.scooter = this.scooters.pop();
   }
 
   returnScooter(user, app) {
+    this.throwError(
+      !this.isUserAtStation(user),
+      "user must be at a charging station to return a scooter"
+    );
+
     const scooter = user.scooter;
+    app.stopAndRemoveUserTimer(user);
     app.takePayment(user);
     user.scooter = null;
     if (scooter.isBroken) this.markedForRepair.push(scooter);
@@ -43,16 +50,19 @@ class Station extends Base {
   }
 
   recordVisitor(user) {
-    this.visitors.push(user.name);
+    this.throwError(
+      this.visitors.includes(user.id),
+      "user cannot visit station if already present"
+    );
+    this.visitors.push(user.id);
   }
 
   recordVisitorDepart(user) {
-    this.visitors.splice(this.visitors.indexOf(user.name), 1);
+    this.visitors.splice(this.visitors.indexOf(user.id), 1);
   }
 
   isUserAtStation(user) {
-    console.log(this.visitors.includes(user.name));
-    return this.visitors.includes(user.name);
+    return this.visitors.includes(user.id);
   }
 
   bulkChargeScooters() {
@@ -74,6 +84,7 @@ class Station extends Base {
     // removes charged scooters from uncharged array
     this.unchargedScooters = this.unchargedScooters.filter((scooter) => {
       if (!scooter.isCharged) return scooter;
+      return;
     });
   }
 
@@ -81,8 +92,8 @@ class Station extends Base {
     const repairedScooters = await Maintenance.repairScooters(
       this.markedForRepair
     );
-    this.unchargedScooters = this.unchargedScooters.concat(repairedScooters);
     this.markedForRepair = [];
+    this.unchargedScooters = this.unchargedScooters.concat(repairedScooters);
   }
 
   static connectStationsToApp() {

@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/CodeFeeZilla/scooter-hire-system#readme",
   "devDependencies": {
+    "@types/sinonjs__fake-timers": "^6.0.4",
     "jest": "^27.2.5"
   }
 }

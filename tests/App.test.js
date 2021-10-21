@@ -11,9 +11,4 @@ describe("Unit Test: App Class", () => {
       "Users must be 18 and over to register"
     );
   });
-
-  test("takePayment should deduce cost of rental and log balance before and after deduction", () => {
-    app.takePayment(dummyUser);
-    console.log(app);
-  });
 });

@@ -5,21 +5,8 @@ const station = new Station("Main");
 //dummy objects for testing functionality
 const dummyApp = {
   takePayment: (user) => 2,
-  addAndStartUserTimer: (user) => {
-    const userTimer = { id: user.id, time: 0, timerId: null };
-    userTimer.startTimer = () => {
-      this.timerId = setInterval(() => {
-        this.time++;
-      }, 1000);
-    };
-    this.userTimer.startTimer();
-    this.userTimers.push(userTimer);
-  },
-  stopAndRemoveUserTimer: (user) => {
-    const userTimer = this.userTimers.find(
-      (userTimer) => userTimer.id === user.id
-    );
-  },
+  recordRentalTime: (user) => 1,
+  recordReturnTime: (user) => 1,
 };
 const dummyScooter1 = {
   name: "fast and electric",
@@ -122,7 +109,7 @@ describe("Unit Test: Station Class", () => {
   test("returnScooter should remove users reference to scooter instance, charge it, and add it to unchargedScooters array if not marked for repair; otherwise, add it to marked for markedForRepair array", () => {
     // dummyScooter2 marked for repair
     station.stockScooter(dummyScooter2);
-    station.rentScooter(dummyUser2);
+    station.rentScooter(dummyUser2, dummyApp);
     console.log(dummyUser2);
     station.returnScooter(dummyUser2, dummyApp);
     expect(dummyUser2.scooter).toBeNull();
@@ -138,8 +125,8 @@ describe("Unit Test: Station Class", () => {
   });
 
   test("rentScooter should throw an error if user is not on visitor list", () => {
-    station.rentScooter(dummyUser1);
-    expect(() => station.rentScooter(nonPresentUser)).toThrowError(
+    station.rentScooter(dummyUser1, dummyApp);
+    expect(() => station.rentScooter(nonPresentUser, dummyApp)).toThrowError(
       "user must be at a charging station to rent a scooter"
     );
   });

@@ -13,14 +13,11 @@ const dummyScooter1 = {
   isCharged: true,
   isBroken: false,
   async charge() {
-    console.log("Starting charge");
-
     return new Promise(
       (resolve) =>
         setTimeout(() => {
           this.isCharged = true;
 
-          console.log("Charge complete");
           resolve();
         }),
       2000
@@ -32,14 +29,11 @@ const dummyScooter2 = {
   isCharged: true,
   isBroken: true,
   async charge() {
-    console.log("Starting charge");
-
     return new Promise(
       (resolve) =>
         setTimeout(() => {
           this.isCharged = true;
 
-          console.log("Charge complete");
           resolve();
         }),
       2000
@@ -51,14 +45,11 @@ const dummyScooter3 = {
   isCharged: false,
   isBroken: false,
   async charge() {
-    console.log("Starting charge");
-
     return new Promise(
       (resolve) =>
         setTimeout(() => {
           this.isCharged = true;
 
-          console.log("Charge complete");
           resolve();
         }),
       2000
@@ -84,7 +75,6 @@ describe("Unit Test: Station Class", () => {
   });
 
   test("recordVisitor should throw an error if user is at station and visits the station", () => {
-    console.log(station.visitors);
     expect(() => station.recordVisitor(dummyUser1)).toThrowError(
       "user cannot visit station if already present"
     );
@@ -110,7 +100,6 @@ describe("Unit Test: Station Class", () => {
     // dummyScooter2 marked for repair
     station.stockScooter(dummyScooter2);
     station.rentScooter(dummyUser2, dummyApp);
-    console.log(dummyUser2);
     station.returnScooter(dummyUser2, dummyApp);
     expect(dummyUser2.scooter).toBeNull();
     expect(station.markedForRepair.length).toBe(1);
@@ -119,7 +108,6 @@ describe("Unit Test: Station Class", () => {
   test("returnScooter should remove users reference to scooter instance, charge it, and add it to markedForRepair array if marked for repair", () => {
     // dummyScooter1 not marked for repair
     station.returnScooter(dummyUser1, dummyApp);
-    console.log(station);
     expect(dummyUser1.scooter).toBeNull();
     expect(station.unchargedScooters.length).toBe(1);
   });
@@ -151,7 +139,6 @@ describe("Unit Test: Station Class", () => {
     station.recordVisitorDepart(dummyUser1);
     station.recordVisitorDepart(dummyUser2);
 
-    console.log(dummyUser1);
     expect(station.visitors.length).toBe(0);
   });
 });

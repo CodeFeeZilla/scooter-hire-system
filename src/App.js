@@ -4,7 +4,7 @@ class App extends Base {
   constructor() {
     super();
 
-    this.costForRental = 1;
+    this.baseFee = 2;
 
     this.stations = [];
     this.users = [];
@@ -25,15 +25,42 @@ class App extends Base {
     this.stations = stations;
   }
 
+  recordRentalTime(user) {
+    this.userTimers.push({ id: user.id, startTime: new Date().getTime() });
+  }
+
+  recordReturnTime(user) {
+    const index = this.findUserIndex(
+      this.userTimers,
+      (userTimer) => userTimer.id === user.id
+    );
+    this.userTimers[index].returnTime = new Date().getTime();
+  }
+
+  findUserIndex(array, testingFunction) {
+    return array.findIndex(testingFunction);
+  }
+
   takePayment(user) {
+    const index = this.findUserIndex(
+      this.userTimers,
+      (userTimer) => userTimer.id === user.id
+    );
+    const totalTime =
+      this.userTimers[index].returnTime - this.userTimers[index].startTime;
+    const fee = this.calculateFee(totalTime);
     console.log(`${user.name}'s' balance before rental ${user.balance}`);
-    user.balance -= this.costForRental;
+    user.balance -= fee;
     console.log(`${user.name}'s' balance after rental ${user.balance}`);
     this.payments.push({
       name: user.name,
       id: user.id,
       paid: this.costForRental,
     });
+  }
+
+  calculateFee(time) {
+    return (time * this.baseFee) / 36.78;
   }
 
   getStations() {

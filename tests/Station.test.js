@@ -1,22 +1,24 @@
 const Station = require("./../src/Station");
-const FakeTimers = require("@sinonjs/fake-timers");
-
-const clock = FakeTimers.install();
 
 const station = new Station("Main");
 
 //dummy objects for testing functionality
 const dummyApp = {
   takePayment: (user) => 2,
-  addAndStartUserTimer: function (user) {
+  addAndStartUserTimer: (user) => {
     const userTimer = { id: user.id, time: 0, timerId: null };
-    userTimer.startTimer = function () {
+    userTimer.startTimer = () => {
       this.timerId = setInterval(() => {
         this.time++;
       }, 1000);
     };
     this.userTimer.startTimer();
     this.userTimers.push(userTimer);
+  },
+  stopAndRemoveUserTimer: (user) => {
+    const userTimer = this.userTimers.find(
+      (userTimer) => userTimer.id === user.id
+    );
   },
 };
 const dummyScooter1 = {
@@ -145,9 +147,7 @@ describe("Unit Test: Station Class", () => {
   test("bulkChargeScooters should return an array of promises that charge scooters when consumed", async () => {
     station.stockScooter(dummyScooter3);
 
-    let p = station.bulkChargeScooters();
-    await clock.runAllAsync();
-    await Promise.all(p);
+    await Promise.all(station.bulkChargeScooters());
 
     expect(station.unchargedScooters).toMatchObject([
       { ...dummyScooter1, ["isCharged"]: true },

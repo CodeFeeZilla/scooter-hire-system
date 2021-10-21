@@ -14,7 +14,7 @@ const scooter2 = new Scooter(false);
 const actors = [user1, user2, app, station1, station2, scooter1, scooter2];
 
 describe("Intergration Test for Hire App System", () => {
-  beforeAll(async () => {
+  beforeAll(() => {
     actors.forEach((actor) => console.log(JSON.stringify(actor)));
   });
 

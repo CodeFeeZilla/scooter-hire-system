@@ -39,7 +39,7 @@ class Scooter extends Base {
   }
 
   ride(distance) {
-    if (this.range - distance <= 0) {
+    if (this.range - distance <= 0 || this.range === 0) {
       this.range = 0;
       this.isCharged = false;
       console.log(

@@ -25,16 +25,14 @@ class Scooter extends Base {
   async charge() {
     console.log("Starting charge");
 
-    return new Promise(
-      (resolve) =>
-        setTimeout(() => {
-          this.range = 32;
-          this.isCharged = true;
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        this.range = 32;
+        this.isCharged = true;
 
-          console.log("Charge complete");
-          resolve();
-        }),
-      2000
+        console.log("Charge complete");
+        resolve();
+      }, 200000)
     ); // wait 2 seconds
   }
 
